@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Bot Message Sender</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Telegram Message Sender</h1>
+    <label for="botToken">Bot Token:</label>
+    <input type="text" id="botToken" placeholder="Enter your bot token">
+    
+    <label for="chatIds">Chat IDs (comma-separated):</label>
+    <input type="text" id="chatIds" placeholder="Enter chat IDs (e.g., 12345,67890)">
+
+    <label for="customMessage">Custom Message:</label>
+    <textarea id="customMessage" rows="3" placeholder="Enter your message"></textarea>
+    
+    <label for="fileUpload">Upload Image (Optional):</label>
+    <input type="file" id="fileUpload" accept="image/*">
+    
+    <div id="buttons-section">
+      <h3>Custom Buttons</h3>
+      <div id="buttonInputs">
+        <div class="button-row">
+          <input type="text" class="button-name" placeholder="Enter button name">
+          <input type="url" class="button-link" placeholder="Enter button link">
+        </div>
+      </div>
+      <button id="addButton">+ Add Another Button</button>
+    </div>
+
+    <button id="sendMessage" class="send-button">Send Message</button>
+    
+    <footer>
+      <p>Service by <span> <a href="www.ocearn.com"> OC EARN</a>
+      </span></p>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
