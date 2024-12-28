@@ -1,44 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telegram Bot Message Sender</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Message Sender UI</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Telegram Message Sender</h1>
-    <label for="botToken">Bot Token:</label>
-    <input type="text" id="botToken" placeholder="Enter your bot token">
-    
-    <label for="chatIds">Chat IDs (comma-separated):</label>
-    <input type="text" id="chatIds" placeholder="Enter chat IDs (e.g., 12345,67890)">
+<div class="container">
+    <h1>Bot Message Sender</h1>
 
-    <label for="customMessage">Custom Message:</label>
-    <textarea id="customMessage" rows="3" placeholder="Enter your message"></textarea>
-    
-    <label for="fileUpload">Upload Image (Optional):</label>
-    <input type="file" id="fileUpload" accept="image/*">
-    
-    <div id="buttons-section">
-      <h3>Custom Buttons</h3>
-      <div id="buttonInputs">
-        <div class="button-row">
-          <input type="text" class="button-name" placeholder="Enter button name">
-          <input type="url" class="button-link" placeholder="Enter button link">
-        </div>
-      </div>
-      <button id="addButton">+ Add Another Button</button>
-    </div>
+    <!-- Bot Token Input -->
+    <label for="bot-token">Bot Token:</label>
+    <input type="text" id="bot-token" placeholder="Enter your bot token">
 
-    <button id="sendMessage" class="send-button">Send Message</button>
+    <!-- Chat IDs Input -->
+    <label for="chat-ids">User Chat IDs:</label>
+    <textarea id="chat-ids" placeholder="Enter chat IDs, separated by commas or new lines"></textarea>
+
+    <!-- Custom Message Input -->
+    <label for="custom-message">Custom Message:</label>
+    <textarea id="custom-message" placeholder="Enter your custom message"></textarea>
+
+
+    <!-- Upload Image Option -->
+    <label for="upload-file">Upload Image (Optional):</label>
+    <input type="file" id="upload-file" accept="image/*">
+
+
+    <!-- Custom Button Option -->
+    <label for="custom-button">Custom Buttons (Optional):</label>
+    <textarea id="custom-button" placeholder="Example:
+Button 1 - https://link1.com | Button 2 - https://link2.com
+Button 3 - https://link3.com"></textarea>
+
+
+
+<!-- Random OTP generater  -->
+  <!-- OTP Section -->
+         <div class="otp-container">
+    <!-- Random OTP Display -->
+    <div id="otpDisplay" class="otp-display">OTP</div>
+
+    <!-- Copy Button -->
+    <button class="button copy" onclick="copyOTP()">Copy</button>
+
+    <!-- Custom OTP Button -->
+    <button id="customBtn" class="button custom" onclick="toggleCustomInput()">Custom</button>
+
+    <!-- Random Button -->
+    <button class="button random" onclick="generateRandomOTP()">Random</button>
+
+    <!-- Custom Input Box -->
+   <!-- Custom Input Box -->
+<div class="input-box" id="customInputBox">
+    <input type="text" id="customOTP" placeholder="Enter custom OTP" onkeydown="setCustomOTP(event)">
+</div>
+
+    <!-- Send Button -->
+    <button class="send-button" onclick="sendMessage()">Send Message</button>
+</div>
+<!--<button onclick="resetForm()">Reset</button>-->
     
-    <footer>
-      <p>Service by <span>oc earn
-      </span></p>
-    </footer>
-  </div>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

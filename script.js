@@ -1,93 +1,163 @@
-document.getElementById('sendMessage').addEventListener('click', () => {
-  const botToken = document.getElementById('botToken').value.trim();
-  const chatIds = document.getElementById('chatIds').value.trim().split(',');
-  const customMessage = document.getElementById('customMessage').value.trim();
-  const fileInput = document.getElementById('fileUpload');
-  const file = fileInput.files[0];
+// Function to send a message to Telegram users
+function sendMessage() {
+    // Get input values
+    const botToken = document.getElementById("bot-token").value.trim();
+    const chatIds = document.getElementById("chat-ids").value.trim();
+    const customMessage = document.getElementById("custom-message").value.trim();
+    const uploadFile = document.getElementById("upload-file").files[0];
+    const customButtons = document.getElementById("custom-button").value.trim();
 
-  // Collect buttons data
-  const buttonRows = document.querySelectorAll('.button-row');
-  const buttons = Array.from(buttonRows).map(row => {
-    const name = row.querySelector('.button-name').value.trim();
-    const link = row.querySelector('.button-link').value.trim();
-    return { text: name, url: link };
-  });
+    // Validate inputs
+    if (!botToken) {
+        alert("Please enter your Bot Token.");
+        return;
+    }
+    if (!chatIds) {
+        alert("Please enter at least one Chat ID.");
+        return;
+    }
+    if (!customMessage && !uploadFile) {
+        alert("Please enter a custom message or upload an image.");
+        return;
+    }
 
-  // Validate inputs
-  if (!botToken || !chatIds || !customMessage) {
-    alert("Please fill in all required fields!");
-    return;
-  }
+    // Validate file type (only images allowed)
+    if (uploadFile && !uploadFile.type.startsWith("image/")) {
+        alert("Only image files are allowed. Please upload a valid image.");
+        return;
+    }
 
-  // Loop through chatIds and send messages
-  chatIds.forEach(chatId => {
-    const payload = {
-      chat_id: chatId.trim(),
-      text: customMessage,
-      parse_mode: "HTML",
-      reply_markup: {
-        inline_keyboard: []
+    // Prepare unique chat IDs (remove duplicates)
+    const chatIdArray = Array.from(new Set(chatIds.split(/[\n,]+/).map(id => id.trim()).filter(id => id)));
+
+    // Track successful and failed messages
+    let failedChats = [];
+
+    // Iterate through chat IDs and send messages individually
+    const promises = chatIdArray.map(chatId => {
+        return new Promise(resolve => {
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append("chat_id", chatId);
+
+            // Check if file is uploaded
+            if (uploadFile) {
+                formData.append("photo", uploadFile); // Use 'photo' for images
+                if (customMessage) {
+                    formData.append("caption", customMessage); // Add custom message as caption
+                }
+            } else {
+                formData.append("text", customMessage); // Add message text
+            }
+
+            // If custom buttons are provided, add them to the payload
+            if (customButtons) {
+                const inlineKeyboard = customButtons.split("\n").map(buttonLine => {
+                    const buttons = buttonLine.split("|").map(button => {
+                        const [text, url] = button.split(" - ");
+                        return { text: text.trim(), url: url.trim() };
+                    });
+                    return buttons;
+                });
+                formData.append("reply_markup", JSON.stringify({ inline_keyboard: inlineKeyboard }));
+            }
+
+            // Determine endpoint (sendPhoto or sendMessage)
+            const endpoint = uploadFile
+                ? `https://api.telegram.org/bot${botToken}/sendPhoto`
+                : `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            // Send the request
+            fetch(endpoint, {
+                method: "POST",
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        resolve({ success: true, chatId });
+                    } else {
+                        failedChats.push(chatId);
+                        resolve({ success: false, chatId });
+                    }
+                })
+                .catch(error => {
+                    failedChats.push(chatId);
+                    resolve({ success: false, chatId });
+                });
+        });
+    });
+
+    // Wait for all promises to complete
+    Promise.all(promises).then(results => {
+        const successCount = results.filter(result => result.success).length;
+
+        if (successCount > 0) {
+            alert("Message send successful");
+        }
+        if (failedChats.length > 0) {
+            console.error(`Failed to send messages to these Chat IDs: ${failedChats.join(", ")}`);
+        }
+    });
+}
+
+
+
+
+// Generate Initial Random OTP
+    function generateRandomOTP() {
+      const randomOTP = Math.floor(1000 + Math.random() * 900000); // 4 to 6 digits
+      const otpDisplay = document.getElementById('otpDisplay');
+      otpDisplay.innerText = randomOTP;
+
+      // Add animation
+      otpDisplay.classList.add('shake');
+      setTimeout(() => {
+        otpDisplay.classList.remove('shake');
+      }, 300);
+    }
+
+    // Copy OTP to Clipboard
+    function copyOTP() {
+      const otp = document.getElementById('otpDisplay').innerText;
+      navigator.clipboard.writeText(otp).then(() => {
+        const copyBtn = document.querySelector('.button.copy');
+        copyBtn.innerText = 'Copied!';
+        setTimeout(() => {
+          copyBtn.innerText = 'Copy';
+        }, 2000);
+      });
+    }
+
+    // Toggle Custom OTP Input Box
+    function toggleCustomInput() {
+      const inputBox = document.getElementById('customInputBox');
+      const customBtn = document.getElementById('customBtn');
+
+      if (inputBox.style.display === 'block') {
+        inputBox.style.display = 'none';
+        customBtn.innerText = 'Custom';
+        customBtn.style.backgroundColor = '#FF9800';
+      } else {
+        inputBox.style.display = 'block';
+        customBtn.innerText = 'Close';
+        customBtn.style.backgroundColor = '#FF5722';
       }
-    };
-
-    // Add buttons to the payload if any
-    if (buttons.length > 0) {
-      payload.reply_markup.inline_keyboard = buttons.map(button => [{
-        text: button.text,
-        url: button.url
-      }]);
     }
 
-    // Check if a file is uploaded
-    if (file) {
-      const formData = new FormData();
-      formData.append("chat_id", chatId.trim());
-      formData.append("photo", file);
-      formData.append("caption", customMessage);  // The message will be the caption of the image
-      formData.append("reply_markup", JSON.stringify(payload.reply_markup)); // Add buttons along with the image
-
-      // Send image with caption and buttons
-      fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.ok) {
-          console.log(`Photo and buttons sent to Chat ID: ${chatId}`);
+    // Set Custom OTP
+    function setCustomOTP(event) {
+      if (event.key === 'Enter') {
+        const customOTP = document.getElementById('customOTP').value.trim();
+        if (customOTP !== '' && !isNaN(customOTP)) {
+          document.getElementById('otpDisplay').innerText = customOTP;
+          toggleCustomInput();
+          document.getElementById('customOTP').value = ''; // Clear input
         } else {
-          console.error(`Failed to send photo and buttons to Chat ID: ${chatId}`, data);
+          alert('Please enter a valid numeric OTP.');
         }
-      })
-      .catch(error => console.error('Error:', error));
-    } else {
-      // Send text message with buttons
-      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.ok) {
-          console.log(`Message with buttons sent to Chat ID: ${chatId}`);
-        } else {
-          console.error(`Failed to send message with buttons to Chat ID: ${chatId}`, data);
-        }
-      })
-      .catch(error => console.error('Error:', error));
+      }
     }
-  });
 
-  alert("Messages sent!");
-});
-
-document.getElementById('addButton').addEventListener('click', () => {
-  const buttonRow = document.createElement('div');
-  buttonRow.className = 'button-row';
-  buttonRow.innerHTML = `
-    <input type="text" class="button-name" placeholder="Enter button name">
-    <input type="url" class="button-link" placeholder="Enter button link">
-  `;
-  document.getElementById('buttonInputs').appendChild(buttonRow);
-});
+    // Generate a random OTP when the page loads
+    generateRandomOTP();

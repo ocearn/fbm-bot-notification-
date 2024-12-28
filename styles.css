@@ -1,100 +1,133 @@
-/* styles.css */
+/* General Styles */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f4f6;
+    margin: 0;
+    padding: 20px;
 }
 
 .container {
-  background-color: #ffffff;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
-  width: 90%;
-  text-align: center;
+    max-width: 500px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 
 h1 {
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 1.8em;
-  font-weight: bold;
+    text-align: center;
+    color: #27ae60;
+    margin-bottom: 20px;
 }
 
+/* Labels and Inputs */
 label {
-  display: block;
-  margin-top: 15px;
-  font-weight: bold;
-  color: #555;
-  text-align: left;
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
 }
 
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-input:focus, textarea:focus {
-  border-color: #28a745;
+input, textarea, button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    margin-left: -10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 textarea {
-  resize: none;
+    resize: vertical;
 }
 
-#buttons-section {
-  margin: 20px 0;
-  text-align: left;
+input[type="file"] {
+    padding: 5px;
 }
 
-.button-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
+/* Send Button */
+.send-button {
+    margin-top: 10px;
+    margin-right: -10px;
+    background-color: #27ae60;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
-.button-row input {
-  flex: 1;
+.send-button:hover {
+    background-color: #1e8449;
 }
 
-button {
-  background-color: #28a745;
-  color: #fff;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
+/* OTP Section */
+.otp-container {
+    text-align: center;
 }
 
-button:hover {
-  background-color: #218838;
+.otp-display {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    padding: 15px 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: transform 0.2s, background-color 0.3s;
 }
 
-button:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
+.otp-display.shake {
+    transform: scale(1.1);
+    background-color: #e8f5e9;
 }
 
-footer {
-  margin-top: 20px;
-  color: #aaa;
-  font-size: 14px;
+.button {
+    padding: 10px 15px;
+    margin: 5px 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block; /* Ensure buttons are inline */
+    width: auto; /* Allow buttons to size based on content */
 }
 
-footer span {
-  color: #28a745;
-  font-weight: bold;
+.button.copy {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.button.custom {
+    background-color: #FF9800;
+    color: #fff;
+}
+
+.button.random {
+    background-color: #FFEB3B;
+    color: #333;
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+.input-box {
+    display: none;
+    margin-top: 15px;
+}
+
+.input-box input {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    width: calc(100% - 24px);
 }
